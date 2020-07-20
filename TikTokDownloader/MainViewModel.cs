@@ -106,7 +106,6 @@ namespace TikTokDownloader
 		{
 			string filePath = Path.Combine(settings.DownloadFolder, videoName + ".mp4");
 			if (File.Exists(filePath)) return;
-			
 			var response = await client.GetAsync(url);
 			using (var fs = new FileStream(filePath, FileMode.Create))
 			{
@@ -132,21 +131,48 @@ namespace TikTokDownloader
 		{
 			IsBusy = true;
 
-			var favs = GetJsonFromHar();
-			if (favs == null) return;
-			JsonHelper.SerializeFile(settings.DownloadFolder, favs);
-			await DownloadListAsync(favs);
+            try
+            {
+                var favs = GetJsonFromHar();
+                if (favs == null)
+                {
+                    IsBusy = false;
+                    return;
+                }
+                var filename = $"videos ({DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")}).json";
+                var path = Path.Combine(settings.DownloadFolder, filename);
+                JsonHelper.SerializeFile(path, favs);
+                await DownloadListAsync(favs);
+            }
+            catch (Exception ex)
+            {
+				ErrorMessage = ex.ToString();
+				CatchException(ex, nameof(DownloadFromHarAsync));
+            }
 
 			IsBusy = false;
 		}
+
+
 
 		private async Task OpenAndDownloadJsonAsync()
 		{
 			IsBusy = true;
 
-			var favs = DeserializeFile<List<FavoriteItem>>();
-			if (favs == null) return;
-			await DownloadListAsync(favs);
+            try
+            {
+                var favs = DeserializeFile<List<FavoriteItem>>();
+                if (favs == null)
+                {
+                    IsBusy = false;
+                    return;
+                }
+                await DownloadListAsync(favs);
+            }
+            catch (Exception ex)
+            {
+				CatchException(ex, nameof(OpenAndDownloadJsonAsync));
+            }
 		
 			IsBusy = false;
 		}
@@ -164,13 +190,19 @@ namespace TikTokDownloader
 
 			foreach (var req in requests)
 			{
-				var data = Convert.FromBase64String(req.Response.Content.Text);
-				var json = System.Text.Encoding.UTF8.GetString(data);
-				var favorites = JsonConvert.DeserializeObject<Favorites>(json);
-				foreach (var fav in favorites.Items)
-				{
-					favList.Add(fav);
-				}
+                try
+                {
+                    var data = Convert.FromBase64String(req.Response.Content.Text);
+                    var json = System.Text.Encoding.UTF8.GetString(data);
+                    var favorites = JsonConvert.DeserializeObject<Favorites>(json);
+                    foreach (var fav in favorites.Items)
+                    {
+                        favList.Add(fav);
+                    }
+                }
+                catch (System.FormatException ex)
+                {
+                }
 			}
 
 			return favList;
