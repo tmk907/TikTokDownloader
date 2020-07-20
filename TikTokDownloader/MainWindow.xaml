@@ -1,0 +1,45 @@
+﻿<Window x:Class="TikTokDownloader.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TikTokDownloader"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="400">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="0,4"/>
+        </Style>
+        <Style TargetType="Rectangle">
+            <Setter Property="Height" Value="1"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="Fill" Value="Black"/>
+            <Setter Property="Margin" Value="0,12,0,12"/>
+        </Style>
+        <local:InvertedBoolConverter x:Key="InvertedBool"/>
+        <local:VisibilityConverter x:Key="Visibility"/>
+    </Window.Resources>
+    
+    <Grid Margin="4">
+        <StackPanel>
+            <Button Content="Choose download folder" Command="{Binding ChooseFolderCommand}" />
+            <Rectangle/>
+            
+            <Button 
+                Content="Download from har" 
+                IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBool}}"
+                Command="{Binding DownloadFromHarCommand}"/>
+            <Button
+                Content="Download from json" 
+                IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBool}}"
+                Command="{Binding OpenJsonCommand}"/>
+            <Rectangle/>
+            <StackPanel Visibility="{Binding IsBusy, Converter={StaticResource Visibility}}">
+                <TextBlock Text="Downloading"/>
+                <TextBlock Text="{Binding Progress}"/>
+            </StackPanel>
+
+            <TextBlock Text="{Binding ErrorMessage}"/>
+        </StackPanel>
+    </Grid>
+</Window>
