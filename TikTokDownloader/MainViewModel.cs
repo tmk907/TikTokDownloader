@@ -23,6 +23,7 @@ namespace TikTokDownloader
 		public MainViewModel()
 		{
 			client = new HttpClient();
+			client.DefaultRequestHeaders.Referrer = new Uri("https://www.tiktok.com/");
 
 			DownloadFromHarCommand = new AsyncCommand(DownloadFromHarAsync);
 			ChooseFolderCommand = new Command(ChooseFolder);
@@ -105,7 +106,10 @@ namespace TikTokDownloader
 		private async Task DownloadVideoAsync(string url, string videoName)
 		{
 			string filePath = Path.Combine(settings.DownloadFolder, videoName + ".mp4");
-			if (File.Exists(filePath)) return;
+			if (File.Exists(filePath))
+            {
+				return;
+            }
 			var response = await client.GetAsync(url);
 			using (var fs = new FileStream(filePath, FileMode.Create))
 			{
@@ -142,7 +146,8 @@ namespace TikTokDownloader
                 var filename = $"videos ({DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")}).json";
                 var path = Path.Combine(settings.DownloadFolder, filename);
                 JsonHelper.SerializeFile(path, favs);
-                await DownloadListAsync(favs);
+				favs.Reverse();
+				await DownloadListAsync(favs);
             }
             catch (Exception ex)
             {
@@ -167,6 +172,7 @@ namespace TikTokDownloader
                     IsBusy = false;
                     return;
                 }
+				favs.Reverse();
                 await DownloadListAsync(favs);
             }
             catch (Exception ex)
@@ -213,7 +219,7 @@ namespace TikTokDownloader
 			counter = 1;
 			total = favs.Count;
 			Progress = $"{counter}/{total}";
-			foreach (var partition in Partition<FavoriteItem>(favs, 10))
+			foreach (var partition in Partition<FavoriteItem>(favs, 4))
 			{
 				await Task.WhenAll(partition.Select(x => DownloadWrapper(x)));
 			}
