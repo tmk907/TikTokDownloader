@@ -50,7 +50,14 @@ namespace TikTokDownloader
 			File.AppendAllText(fileName, ex.ToString());
 			ErrorMessage = ex.ToString();
 		}
-		
+
+		private void LogToFile(string message, string fileName = "logs.txt")
+        {
+			File.AppendAllText(fileName, Environment.NewLine);
+			File.AppendAllText(fileName, message);
+			ErrorMessage = message;
+		}
+
 		private string pastedText = "";
 		public string PastedText
 		{
@@ -198,17 +205,35 @@ namespace TikTokDownloader
 			{
                 try
                 {
-                    var data = Convert.FromBase64String(req.Response.Content.Text);
-                    var json = System.Text.Encoding.UTF8.GetString(data);
+					string json = "";
+					if(req.Response.Content.MimeType == "application/json")
+                    {
+                        if (req.Response.Content.Text.Contains('{'))
+                        {
+							json = req.Response.Content.Text;
+						}
+                        else
+                        {
+							var data = Convert.FromBase64String(req.Response.Content.Text);
+							json = System.Text.Encoding.UTF8.GetString(data);
+						}
+					}
+					else if (req.Response.Content.MimeType == "base64")
+                    {
+						var data = Convert.FromBase64String(req.Response.Content.Text);
+						json = System.Text.Encoding.UTF8.GetString(data);
+					}
+                    else { }
                     var favorites = JsonConvert.DeserializeObject<Favorites>(json);
                     foreach (var fav in favorites.Items)
                     {
                         favList.Add(fav);
                     }
                 }
-                catch (System.FormatException ex)
+                catch (Exception ex)
                 {
-                }
+					LogToFile(ex.ToString());
+				}
 			}
 
 			return favList;

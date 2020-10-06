@@ -1,6 +1,6 @@
 # TikTokDownloader
 
-How to download your favorite videos.
+How to download your favorite videos or any profile videos.
 
 - TikTok app: Go to "Settings", "Privacy and safety" and change
 "Who can view your liked videos" to "Everyone".
