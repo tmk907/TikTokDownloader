@@ -23,9 +23,10 @@ namespace TikTokDownloader
 		public MainViewModel()
 		{
 			client = new HttpClient();
-			client.DefaultRequestHeaders.Referrer = new Uri("https://www.tiktok.com/");
+			//client.DefaultRequestHeaders.Host = "v16-web.tiktok.com";
+			//client.DefaultRequestHeaders.Referrer = new Uri("https://www.tiktok.com/");
 
-			DownloadFromHarCommand = new AsyncCommand(DownloadFromHarAsync);
+            DownloadFromHarCommand = new AsyncCommand(DownloadFromHarAsync);
 			ChooseFolderCommand = new Command(ChooseFolder);
 			OpenJsonCommand = new AsyncCommand(OpenAndDownloadJsonAsync);
 			settings = SettingsHelper.Read();
@@ -200,7 +201,7 @@ namespace TikTokDownloader
 				.Where(x => x.Request.Url.ToString().Contains("https://m.tiktok.com/api/item_list"));
 
 			var favList = new List<FavoriteItem>();
-
+			
 			foreach (var req in requests)
 			{
                 try
@@ -227,6 +228,7 @@ namespace TikTokDownloader
                     var favorites = JsonConvert.DeserializeObject<Favorites>(json);
                     foreach (var fav in favorites.Items)
                     {
+						fav.Headers.AddRange(req.Request.Headers.Where(x=>!x.Name.StartsWith(":")));
                         favList.Add(fav);
                     }
                 }
@@ -241,6 +243,12 @@ namespace TikTokDownloader
 
 		private async Task DownloadListAsync(List<FavoriteItem> favs)
 		{
+			client = new HttpClient();
+			foreach (var header in favs.FirstOrDefault().Headers)
+            {
+				client.DefaultRequestHeaders.Add(header.Name, header.Value);
+            }
+
 			counter = 1;
 			total = favs.Count;
 			Progress = $"{counter}/{total}";

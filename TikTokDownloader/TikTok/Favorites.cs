@@ -77,6 +77,9 @@ namespace TikTokDownloader.TikTok
 
         [JsonProperty("warnInfo", NullValueHandling = NullValueHandling.Ignore)]
         public List<WarnInfo> WarnInfo { get; set; }
+
+        [JsonProperty("headers", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Header> Headers { get; set; } = new List<Header>();
     }
 
     public partial class Author
