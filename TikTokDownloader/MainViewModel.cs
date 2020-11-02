@@ -19,7 +19,7 @@ namespace TikTokDownloader
 {
 	class MainViewModel : ObservableObject
     {
-		private readonly HttpClient client;
+		private HttpClient client;
 		public MainViewModel()
 		{
 			client = new HttpClient();
