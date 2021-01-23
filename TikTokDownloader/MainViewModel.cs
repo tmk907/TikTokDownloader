@@ -13,7 +13,7 @@ using Microsoft.WindowsAPICodePack.Shell;
 using MvvmHelpers;
 using MvvmHelpers.Commands;
 using Newtonsoft.Json;
-using TikTokDownloader.TikTok;
+using TikTokDownloader.TikTok.Favorites;
 
 namespace TikTokDownloader
 {
@@ -198,7 +198,7 @@ namespace TikTokDownloader
 			if (archive == null) return null;
 
 			var requests = archive.Log.Entries
-				.Where(x => x.Request.Url.ToString().Contains("https://m.tiktok.com/api/item_list"));
+				.Where(x => x.Request.Url.ToString().Contains("https://m.tiktok.com/api/favorite/item_list"));
 
 			var favList = new List<FavoriteItem>();
 			
@@ -226,7 +226,7 @@ namespace TikTokDownloader
 					}
                     else { }
                     var favorites = JsonConvert.DeserializeObject<Favorites>(json);
-                    foreach (var fav in favorites.Items)
+                    foreach (var fav in favorites.ItemList)
                     {
 						fav.Headers.AddRange(req.Request.Headers.Where(x=>!x.Name.StartsWith(":")));
                         favList.Add(fav);
@@ -243,8 +243,10 @@ namespace TikTokDownloader
 
 		private async Task DownloadListAsync(List<FavoriteItem> favs)
 		{
+			if (favs.Count == 0) return;
+
 			client = new HttpClient();
-			foreach (var header in favs.FirstOrDefault().Headers)
+			foreach (var header in favs.First().Headers)
             {
 				client.DefaultRequestHeaders.Add(header.Name, header.Value);
             }
@@ -252,7 +254,7 @@ namespace TikTokDownloader
 			counter = 1;
 			total = favs.Count;
 			Progress = $"{counter}/{total}";
-			foreach (var partition in Partition<FavoriteItem>(favs, 4))
+			foreach (var partition in Partition(favs, 4))
 			{
 				await Task.WhenAll(partition.Select(x => DownloadWrapper(x)));
 			}
