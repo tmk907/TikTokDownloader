@@ -209,14 +209,18 @@ namespace TikTokDownloader
 					string json = "";
 					if(req.Response.Content.MimeType == "application/json")
                     {
-                        if (req.Response.Content.Text.Contains('{'))
+						var text = req.Response.Content?.Text;
+						if (text != null)
                         {
-							json = req.Response.Content.Text;
-						}
-                        else
-                        {
-							var data = Convert.FromBase64String(req.Response.Content.Text);
-							json = System.Text.Encoding.UTF8.GetString(data);
+							if (text.Contains('{'))
+							{
+								json = req.Response.Content.Text;
+							}
+							else
+							{
+								var data = Convert.FromBase64String(req.Response.Content.Text);
+								json = System.Text.Encoding.UTF8.GetString(data);
+							}
 						}
 					}
 					else if (req.Response.Content.MimeType == "base64")
@@ -225,12 +229,15 @@ namespace TikTokDownloader
 						json = System.Text.Encoding.UTF8.GetString(data);
 					}
                     else { }
-                    var favorites = JsonConvert.DeserializeObject<Favorites>(json);
-                    foreach (var fav in favorites.ItemList)
-                    {
-						fav.Headers.AddRange(req.Request.Headers.Where(x=>!x.Name.StartsWith(":")));
-                        favList.Add(fav);
-                    }
+					if (!string.IsNullOrEmpty(json))
+					{
+						var favorites = JsonConvert.DeserializeObject<Favorites>(json);
+						foreach (var fav in favorites.ItemList)
+						{
+							fav.Headers.AddRange(req.Request.Headers.Where(x => !x.Name.StartsWith(":")));
+							favList.Add(fav);
+						}
+					}
                 }
                 catch (Exception ex)
                 {
