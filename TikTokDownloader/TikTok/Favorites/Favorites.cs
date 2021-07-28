@@ -11,13 +11,13 @@ namespace TikTokDownloader.TikTok.Favorites
         public string Id { get; set; }
 
         [JsonProperty("height")]
-        public int Height { get; set; }
+        public long Height { get; set; }
 
         [JsonProperty("width")]
-        public int Width { get; set; }
+        public long Width { get; set; }
 
         [JsonProperty("duration")]
-        public int Duration { get; set; }
+        public long Duration { get; set; }
 
         [JsonProperty("ratio")]
         public string Ratio { get; set; }
@@ -81,19 +81,19 @@ namespace TikTokDownloader.TikTok.Favorites
         public bool Ftc { get; set; }
 
         [JsonProperty("relation")]
-        public int Relation { get; set; }
+        public long Relation { get; set; }
 
         [JsonProperty("openFavorite")]
         public bool OpenFavorite { get; set; }
 
         [JsonProperty("commentSetting")]
-        public int CommentSetting { get; set; }
+        public long CommentSetting { get; set; }
 
         [JsonProperty("duetSetting")]
-        public int DuetSetting { get; set; }
+        public long DuetSetting { get; set; }
 
         [JsonProperty("stitchSetting")]
-        public int StitchSetting { get; set; }
+        public long StitchSetting { get; set; }
 
         [JsonProperty("privateAccount")]
         public bool PrivateAccount { get; set; }
@@ -127,7 +127,7 @@ namespace TikTokDownloader.TikTok.Favorites
         public bool Original { get; set; }
 
         [JsonProperty("duration")]
-        public int Duration { get; set; }
+        public long Duration { get; set; }
 
         [JsonProperty("album")]
         public string Album { get; set; }
@@ -171,16 +171,16 @@ namespace TikTokDownloader.TikTok.Favorites
     {
 
         [JsonProperty("diggCount")]
-        public int DiggCount { get; set; }
+        public long DiggCount { get; set; }
 
         [JsonProperty("shareCount")]
-        public int ShareCount { get; set; }
+        public long ShareCount { get; set; }
 
         [JsonProperty("commentCount")]
-        public int CommentCount { get; set; }
+        public long CommentCount { get; set; }
 
         [JsonProperty("playCount")]
-        public int PlayCount { get; set; }
+        public long PlayCount { get; set; }
     }
 
     public class DuetInfo
@@ -197,10 +197,10 @@ namespace TikTokDownloader.TikTok.Favorites
         public string AwemeId { get; set; }
 
         [JsonProperty("start")]
-        public int Start { get; set; }
+        public long Start { get; set; }
 
         [JsonProperty("end")]
-        public int End { get; set; }
+        public long End { get; set; }
 
         [JsonProperty("hashtagName")]
         public string HashtagName { get; set; }
@@ -209,7 +209,7 @@ namespace TikTokDownloader.TikTok.Favorites
         public string HashtagId { get; set; }
 
         [JsonProperty("type")]
-        public int Type { get; set; }
+        public long Type { get; set; }
 
         [JsonProperty("userId")]
         public string UserId { get; set; }
@@ -228,29 +228,29 @@ namespace TikTokDownloader.TikTok.Favorites
     {
 
         [JsonProperty("followingCount")]
-        public int FollowingCount { get; set; }
+        public long FollowingCount { get; set; }
 
         [JsonProperty("followerCount")]
-        public int FollowerCount { get; set; }
+        public long FollowerCount { get; set; }
 
         [JsonProperty("heartCount")]
-        public int HeartCount { get; set; }
+        public long HeartCount { get; set; }
 
         [JsonProperty("videoCount")]
-        public int VideoCount { get; set; }
+        public long VideoCount { get; set; }
 
         [JsonProperty("diggCount")]
-        public int DiggCount { get; set; }
+        public long DiggCount { get; set; }
 
         [JsonProperty("heart")]
-        public int Heart { get; set; }
+        public long Heart { get; set; }
     }
 
     public class StickersOnItem
     {
 
         [JsonProperty("stickerType")]
-        public int StickerType { get; set; }
+        public long StickerType { get; set; }
 
         [JsonProperty("stickerText")]
         public IList<string> StickerText { get; set; }
@@ -276,7 +276,7 @@ namespace TikTokDownloader.TikTok.Favorites
         public string Desc { get; set; }
 
         [JsonProperty("createTime")]
-        public int CreateTime { get; set; }
+        public long CreateTime { get; set; }
 
         [JsonProperty("video")]
         public Video Video { get; set; }
@@ -315,7 +315,7 @@ namespace TikTokDownloader.TikTok.Favorites
         public bool Digged { get; set; }
 
         [JsonProperty("itemCommentStatus")]
-        public int ItemCommentStatus { get; set; }
+        public long ItemCommentStatus { get; set; }
 
         [JsonProperty("showNotPass")]
         public bool ShowNotPass { get; set; }
@@ -358,7 +358,7 @@ namespace TikTokDownloader.TikTok.Favorites
     {
 
         [JsonProperty("statusCode")]
-        public int StatusCode { get; set; }
+        public long StatusCode { get; set; }
 
         [JsonProperty("itemList")]
         public IList<FavoriteItem> ItemList { get; set; }
