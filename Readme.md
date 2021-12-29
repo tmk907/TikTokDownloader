@@ -1,5 +1,9 @@
 # TikTokDownloader
 
+This app is no longer maintaned. Instead you can try MyTikTokBackup https://github.com/tmk907/MyTikTokBackup
+
+***
+
 How to download your favorite videos or any profile videos.
 
 - TikTok app: Go to "Settings", "Privacy and safety" and change
